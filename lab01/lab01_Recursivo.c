@@ -6,9 +6,12 @@ int QuantidadeMaiusculasRec1(char* string);
 int QuantidadeMaiusculasRec2(char* string, int i);
 //comeco main
 int main(){
-    char string[50];
-    fgets(string, 50, stdin);
-    printf("%d", QuantidadeMaiusculasRec1(string));
+    char string[70];
+    fgets(string, 70, stdin);
+    while(strcmp(string, "FIM\n") != 0){
+        printf("%d\n", QuantidadeMaiusculasRec1(string));
+        fgets(string, 70, stdin);
+    }
     return 0;
 }//fim main
 //comeco QuantidadeMaisculasRec1; entrada: string; retorno: inteiro

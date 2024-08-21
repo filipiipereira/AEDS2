@@ -12,6 +12,9 @@ class Lab01_Iterativo{
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String string = sc.nextLine();
-        QuantidadeMaiusculosIterativo(string);
+        while(!"FIM".equals(string)){
+            QuantidadeMaiusculosIterativo(string);
+            string = sc.nextLine();
+        }
     }//end main
 }//end class

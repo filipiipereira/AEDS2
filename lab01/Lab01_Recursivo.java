@@ -21,6 +21,9 @@ class Lab01_Recursivo{
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String string = sc.nextLine();
-        System.out.println(QuantidadeMaiusculosRecursivo1(string));
+        while(!"FIM".equals(string)){
+            System.out.println(QuantidadeMaiusculosRecursivo1(string));
+            string = sc.nextLine();
+        }
     }//end main
 }//end class

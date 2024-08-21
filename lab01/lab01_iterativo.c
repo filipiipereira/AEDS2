@@ -5,9 +5,14 @@
 int QuantidadeMaisculas(char* string);
 //comeco main
 int main(){
-    char string[50];
-    fgets(string, 50, stdin);
-    printf("%d", QuantidadeMaisculas(string));
+    char string[70];
+    char* flag = "FIM\n";
+    fgets(string, 70, stdin);
+    while(strcmp(string, flag) != 0){
+        printf("%d\n", QuantidadeMaisculas(string));
+        fflush(stdin);
+        fgets(string, 70, stdin);
+    }
     return 0;
 }//fim main
 //comeco QuantidadeMaisculas; entrada: string; saida: inteiro
