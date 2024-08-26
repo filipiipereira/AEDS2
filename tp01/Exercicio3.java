@@ -15,17 +15,7 @@ class Exercicio3 {
         char novoCaractere;
         for(int i = 0; i < string.length(); i++){
             caractere = string.charAt(i);
-            if(caractere >= 'a' && caractere <= 'z'){
-                if(caractere <= 'w') novoCaractere = (char) (caractere + 3);
-                else novoCaractere = (char) (caractere - 23);
-                novaString.append(novoCaractere);
-            }
-            else if(caractere >= 'A' && caractere <= 'Z'){
-                if(caractere <= 'W') novoCaractere = (char) (caractere + 3);
-                else novoCaractere = (char) (caractere - 23);
-                novaString.append(novoCaractere);
-            }
-            else if(caractere < 1 || caractere > 127){
+            if(caractere < 1 || caractere > 127){
                 novaString.append(caractere);
             }
             else{
