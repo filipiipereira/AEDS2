@@ -19,7 +19,7 @@ int main(){
         posicao -= sizeof(float); 
         fseek(arq, posicao, SEEK_SET);
         fread(&leitura, 4, 1, arq);
-        printf("%.3f\n", leitura);
+        printf("%g\n", leitura);
     }
     fclose(arq);
     return 0;

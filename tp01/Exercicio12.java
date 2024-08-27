@@ -15,15 +15,9 @@ class Exercicio12 {
     }
     private static String ciframentoRec2(String string, int i){
         StringBuilder novaString = new StringBuilder();
-        if(i == string.length() - 1){
-            if(string.charAt(i) < 1 || string.charAt(i) > 127) novaString.append(string.charAt(i));
-            else novaString.append((char)(string.charAt(i) + 3));
-        }
-        else{
-            if(string.charAt(i) < 1 || string.charAt(i) > 127) novaString.append(string.charAt(i));
-            else novaString.append((char)(string.charAt(i) + 3));
-            novaString.append(ciframentoRec2(string, i + 1));
-        }
+        if(string.charAt(i) < 1 || string.charAt(i) > 127) novaString.append(string.charAt(i));
+        else novaString.append((char)(string.charAt(i) + 3));
+        if(i != string.length() - 1) novaString.append(ciframentoRec2(string, i + 1));
         return novaString.toString();
     }
 }

@@ -10,17 +10,17 @@ public class Exercicio4 {
         char primeiraLetra = (char)('a' + (Math.abs(gerador.nextInt()) % 26));
         char segundaLetra = (char)('a' + (Math.abs(gerador.nextInt()) % 26));
         while(!"FIM".equals(string)){
-            trocaLetras(string, primeiraLetra, segundaLetra);
+            System.out.println(trocaLetras(string, primeiraLetra, segundaLetra));
             string = scanner.nextLine();
         }
         scanner.close();
     }
-    private static void trocaLetras(String string, char primeiraLetra, char segundaLetra){
-        StringBuilder novaString = new StringBuilder();
+    private static String trocaLetras(String string, char primeiraLetra, char segundaLetra){
+        char[] novaString = new char[string.length()];
         for(int i = 0; i < string.length(); i++){
-            if(string.charAt(i) == primeiraLetra) novaString.append(segundaLetra);
-            else novaString.append(string.charAt(i));
+            if(string.charAt(i) == primeiraLetra) novaString[i] = segundaLetra;
+            else novaString[i] = string.charAt(i);
         }
-        System.out.println(novaString);;
+        return new String(novaString);
     }
 }
