@@ -5,13 +5,13 @@ public class Exercicio5 {
         int n;
         int A;
         int B;
-        boolean expressao;
+        String expressao;
         while(scanner.hasNext()){
             n = scanner.nextInt();
             A = scanner.nextInt();
             B = scanner.nextInt();
-            expressao = scanner.nextBoolean();
-            System.out.println(expressao);
+            expressao = scanner.nextLine();
+            if(valorExpressao(expressao, A, B,)) 
         }
         scanner.close();
     }

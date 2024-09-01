@@ -4,12 +4,12 @@ import java.util.Scanner;
 public class Exercicio4 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String string = scanner.nextLine();
         Random gerador = new Random();
         gerador.setSeed(4);
-        char primeiraLetra = (char)('a' + (Math.abs(gerador.nextInt()) % 26));
-        char segundaLetra = (char)('a' + (Math.abs(gerador.nextInt()) % 26));
+        String string = scanner.nextLine();
         while(!"FIM".equals(string)){
+            char primeiraLetra = (char)('a' + (Math.abs(gerador.nextInt()) % 26));
+            char segundaLetra = (char)('a' + (Math.abs(gerador.nextInt()) % 26));
             System.out.println(trocaLetras(string, primeiraLetra, segundaLetra));
             string = scanner.nextLine();
         }
