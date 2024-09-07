@@ -2,14 +2,14 @@
 
 
 
-public class Lista{
+public class ListaSequencial{
     private int[] array;
     private int contador;
-    public Lista(int tamanho){
+    public ListaSequencial(int tamanho){
         this.array = new int[6];
         this.contador = 0;
     }
-    public Lista(){
+    public ListaSequencial(){
         this.array = new int[10];
         this.contador = 0;
     }

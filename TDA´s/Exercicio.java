@@ -2,7 +2,7 @@
 class Exercicio{
     public static void main(String[] args) {
       System.out.println("==== LISTA SEQUENCIAL ====");
-      Lista lista = new Lista(6);
+      ListaSequencial lista = new ListaSequencial(6);
       int x1, x2, x3;
 
       lista.InserirInicio(1);
