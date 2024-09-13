@@ -12,8 +12,9 @@ class Exercicio7{
         URL url;
         BufferedReader bufferedReader;
         String linha;
-        String textoHtml = "";
+        String textoHtml;
         while(!nome.equals("FIM")){
+            textoHtml = "";
             url_nome = scanner.nextLine();
             try {
                 url = new URL(url_nome);
@@ -31,7 +32,7 @@ class Exercicio7{
         scanner.close();
     }
     private static void escreveQuantidades(String textoHtml){
-        char[] vogais = {'a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ã', 'õ', 'â', 'ê', 'î', 'ô', 'û'};
+        char[] vogais = { 'a', 'e', 'i', 'o', 'u', '\u00E1', '\u00E9', '\u00ED', '\u00F3', '\u00FA', '\u00E0', '\u00E8', '\u00EC', '\u00F2', '\u00F9', '\u00E3', '\u00F5', '\u00E2', '\u00EA', '\u00EE', '\u00F4', '\u00FB' };
         int[] quantidadeVogais = new int[vogais.length];
         int numeroConsoantes = 0;
         int numeroBr = 0;
