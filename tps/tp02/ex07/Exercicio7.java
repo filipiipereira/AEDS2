@@ -129,13 +129,13 @@ class Pokemon {
         System.out.println(getWeight() + "kg - " + getHeight() + "m - " + getCaptureRate() + "% - " + isLegendary() + " - " + getGeneration() + " gen] - " + dateFormat.format(getCaptureDate()));
     }
 }
-class Exercicio3{
-    public static int quantidadeComparacoes = 0;
+class Exercicio7{
+    public static int quantidadeMovimentacoes = 0;
     public static List<Pokemon> lerPokedex() {
         List<Pokemon> pokedex = new ArrayList<>();
         String linha;
         boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader("tmp/pokemon.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("/tmp/pokemon.csv"))) {
             while ((linha = br.readLine()) != null) {
                 if (isFirstLine) {
                     isFirstLine = false;
@@ -162,7 +162,6 @@ class Exercicio3{
             encontrou = false;
             int i = 0;
             while(!encontrou && i < pokedex.size()){
-                quantidadeComparacoes++;
                 if(pokedex.get(i).getId() == id){
                     pokemonsSelecionados.add(pokedex.get(i));
                     quantidadePokemons++;
@@ -176,19 +175,27 @@ class Exercicio3{
         }
         return pokemonsSelecionados.toArray(new Pokemon[0]);
     }
-    public static void pesquisaSequencial(Pokemon[] pokemonsSelecionados, Scanner scanner){
-        String nome;
-        boolean encontrou;
-        while(!(nome = scanner.nextLine()).equals("FIM")){
-            encontrou = false;
-            for(int i = 0; i < pokemonsSelecionados.length && !encontrou; i++){
-                quantidadeComparacoes++;
-                if(pokemonsSelecionados[i].getName().equals(nome)){
-                    encontrou = true;
-                }
+    public static void ordenacaoInsercao(Pokemon[] pokemonsSelecionados){
+        for (int i = 1; i < pokemonsSelecionados.length; i++){ 
+            quantidadeMovimentacoes++;
+            Pokemon tmp = pokemonsSelecionados[i]; 
+            int j = i - 1; 
+            while ((j >= 0) && (pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) > 0)){
+                quantidadeMovimentacoes++;
+                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j]; j--;
+            } 
+            while (j >= 0 && pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) == 0 && pokemonsSelecionados[j].getName().compareTo(tmp.getName()) > 0) {
+                quantidadeMovimentacoes++;
+                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j];
+                j--;
             }
-            if(encontrou) System.out.println("SIM");
-            else System.out.println("NAO");
+            quantidadeMovimentacoes++;
+            pokemonsSelecionados[j + 1] = tmp;
+        }
+    }
+    public static void escrevePokemons(Pokemon[] pokemons){
+        for(Pokemon pokemon : pokemons){
+            pokemon.imprimir();
         }
     }
     public static void main(String[] args) {
@@ -196,10 +203,11 @@ class Exercicio3{
         Scanner scanner = new Scanner(System.in);
         List<Pokemon> pokedex = lerPokedex();
         Pokemon[] pokemonsSelecionados = selecionarPokemons(pokedex, scanner);
-        pesquisaSequencial(pokemonsSelecionados, scanner);
+        ordenacaoInsercao(pokemonsSelecionados);
+        escrevePokemons(pokemonsSelecionados);
         double fim = new Date().getTime();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_sequencial.txt"))) {
-            writer.write("851234\t" + (fim-inicio)/1000.0 + "\t" + quantidadeComparacoes);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_insercao.txt"))) {
+            writer.write("851234\t" + (fim-inicio)/1000.0 + "\t" + quantidadeMovimentacoes);
         } catch (IOException e) {
             System.err.println("Erro ao criar o arquivo de log: " + e.getMessage());
         }

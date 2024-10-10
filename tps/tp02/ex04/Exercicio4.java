@@ -129,7 +129,7 @@ class Pokemon {
         System.out.println(getWeight() + "kg - " + getHeight() + "m - " + getCaptureRate() + "% - " + isLegendary() + " - " + getGeneration() + " gen] - " + dateFormat.format(getCaptureDate()));
     }
 }
-class Exercicio3{
+class Exercicio4{
     public static int quantidadeComparacoes = 0;
     public static List<Pokemon> lerPokedex() {
         List<Pokemon> pokedex = new ArrayList<>();
@@ -176,29 +176,57 @@ class Exercicio3{
         }
         return pokemonsSelecionados.toArray(new Pokemon[0]);
     }
-    public static void pesquisaSequencial(Pokemon[] pokemonsSelecionados, Scanner scanner){
-        String nome;
-        boolean encontrou;
-        while(!(nome = scanner.nextLine()).equals("FIM")){
-            encontrou = false;
-            for(int i = 0; i < pokemonsSelecionados.length && !encontrou; i++){
-                quantidadeComparacoes++;
-                if(pokemonsSelecionados[i].getName().equals(nome)){
-                    encontrou = true;
-                }
-            }
-            if(encontrou) System.out.println("SIM");
-            else System.out.println("NAO");
-        }
+    public static void quickSort(Pokemon[] array){
+        quickSort(array, 0, array.length - 1);
     }
+    public static void quickSort(Pokemon[] array, int esq, int dir) {
+        int i = esq, j = dir;
+        Pokemon pivo = array[(dir+esq)/2];
+        while (i <= j) {
+            while (array[i].getName().compareTo(pivo.getName()) < 0) i++;
+            while (array[j].getName().compareTo(pivo.getName()) > 0) j--;
+            if (i <= j) {
+                Pokemon tmp = array[i];
+                array[i] = array[j];
+                array[j] = tmp;
+                i++;
+                j--;
+            }
+        }
+        if (esq < j)  quickSort(array, esq, j);
+        if (i < dir)  quickSort(array, i, dir);
+    }
+    public static boolean pesquisaBinariaRec(Pokemon[] array, String string){
+        return pesquisaBinariaRec(array, string, 0, array.length - 1);
+    }
+
+    public static boolean pesquisaBinariaRec(Pokemon[] array, String string, int esq, int dir){
+        boolean encontrou;
+        int meio = (esq + dir) / 2;
+        if(esq > dir) {
+            encontrou = false;
+        } else if(string.equals(array[meio].getName())){
+            encontrou = true;
+        } else if (string.compareTo(array[meio].getName()) > 0) {
+            encontrou = pesquisaBinariaRec(array, string, meio + 1, dir);
+        } else {
+            encontrou = pesquisaBinariaRec(array, string, esq, meio - 1);
+        }
+        return encontrou;
+    } 
     public static void main(String[] args) {
         double inicio = new Date().getTime();
         Scanner scanner = new Scanner(System.in);
         List<Pokemon> pokedex = lerPokedex();
         Pokemon[] pokemonsSelecionados = selecionarPokemons(pokedex, scanner);
-        pesquisaSequencial(pokemonsSelecionados, scanner);
+        quickSort(pokemonsSelecionados);
+        String nome;
+        while(!(nome = scanner.nextLine()).equals("FIM")){
+            if(pesquisaBinariaRec(pokemonsSelecionados, nome)) System.out.println("SIM");
+            else System.out.println("NAO");
+        }
         double fim = new Date().getTime();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_sequencial.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_binaria.txt"))) {
             writer.write("851234\t" + (fim-inicio)/1000.0 + "\t" + quantidadeComparacoes);
         } catch (IOException e) {
             System.err.println("Erro ao criar o arquivo de log: " + e.getMessage());
