@@ -129,8 +129,9 @@ class Pokemon {
         System.out.println(getWeight() + "kg - " + getHeight() + "m - " + getCaptureRate() + "% - " + isLegendary() + " - " + getGeneration() + " gen] - " + dateFormat.format(getCaptureDate()));
     }
 }
-class Exercicio7{
+class Exercicio9{
     public static int quantidadeMovimentacoes = 0;
+    public static int quantidadeComparacoes = 0;
     public static List<Pokemon> lerPokedex() {
         List<Pokemon> pokedex = new ArrayList<>();
         String linha;
@@ -175,27 +176,61 @@ class Exercicio7{
         }
         return pokemonsSelecionados.toArray(new Pokemon[0]);
     }
-    public static void ordenacaoInsercao(Pokemon[] pokemonsSelecionados){
-        for (int i = 1; i < pokemonsSelecionados.length; i++){ 
-            quantidadeMovimentacoes++;
-            Pokemon tmp = pokemonsSelecionados[i]; 
-            int j = i - 1; 
-            while ((j >= 0) && (pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) > 0)){
-                quantidadeMovimentacoes++;
-                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j]; j--;
-            } 
-            while (j >= 0 && pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) == 0 && pokemonsSelecionados[j].getName().compareTo(tmp.getName()) > 0) {
-                quantidadeMovimentacoes++;
-                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j];
-                j--;
-            }
-            quantidadeMovimentacoes++;
-            pokemonsSelecionados[j + 1] = tmp;
-        }
-    }
     public static void escrevePokemons(Pokemon[] pokemons){
         for(Pokemon pokemon : pokemons){
             pokemon.imprimir();
+        }
+    }
+    public static void heapSort(Pokemon[] array, int n) {
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            construir(i, n, array);
+        }
+
+        for (int i = n - 1; i > 0; i--) {
+            Pokemon tmp = array[0];
+            array[0] = array[i];
+            array[i] = tmp;
+            quantidadeMovimentacoes += 3;
+            construir(0, i, array);
+        }
+    }
+    public static void construir(int i, int n, Pokemon[] array) {
+        int maior = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        quantidadeComparacoes++;
+        if (left < n && array[left].getHeight() > array[maior].getHeight()) {
+            maior = left;
+        }
+        quantidadeComparacoes++;
+        if (right < n && array[right].getHeight() > array[maior].getHeight()) {
+            maior = right;
+        }
+
+        if (maior != i) {
+            Pokemon tmp = array[i];
+            array[i] = array[maior];
+            array[maior] = tmp;
+            quantidadeMovimentacoes += 3;
+            construir(maior, n, array);
+        }
+    }
+     public static void insercaoMesmoRate(Pokemon[] pokemons, int quantidadePokemons) {
+        int n = quantidadePokemons; 
+        for (int i = 1; i < n; i++) {
+            Pokemon key = pokemons[i];
+            int j = i - 1;
+            
+            quantidadeComparacoes++;
+            while (j >= 0 && 
+                pokemons[j].getHeight()==(key.getHeight()) &&  
+                pokemons[j].getName().compareTo(key.getName()) > 0) {  
+                pokemons[j + 1] = pokemons[j];
+                j = j - 1;
+                quantidadeComparacoes++;
+            }
+            quantidadeMovimentacoes++;
+            pokemons[j + 1] = key;
         }
     }
     public static void main(String[] args) {
@@ -203,11 +238,12 @@ class Exercicio7{
         Scanner scanner = new Scanner(System.in);
         List<Pokemon> pokedex = lerPokedex();
         Pokemon[] pokemonsSelecionados = selecionarPokemons(pokedex, scanner);
-        ordenacaoInsercao(pokemonsSelecionados);
+        heapSort(pokemonsSelecionados, pokemonsSelecionados.length);
+        insercaoMesmoRate(pokemonsSelecionados, pokemonsSelecionados.length);
         escrevePokemons(pokemonsSelecionados);
         double fim = new Date().getTime();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_heapsort.txt"))) {
-            writer.write("851234\t" + (fim-inicio)/1000.0 + "\t" + quantidadeMovimentacoes);
+            writer.write("851234\t" + quantidadeComparacoes + "\t" + quantidadeMovimentacoes + "\t" + (fim-inicio)/1000.0);
         } catch (IOException e) {
             System.err.println("Erro ao criar o arquivo de log: " + e.getMessage());
         }

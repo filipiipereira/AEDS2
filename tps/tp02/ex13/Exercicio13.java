@@ -129,14 +129,14 @@ class Pokemon {
         System.out.println(getWeight() + "kg - " + getHeight() + "m - " + getCaptureRate() + "% - " + isLegendary() + " - " + getGeneration() + " gen] - " + dateFormat.format(getCaptureDate()));
     }
 }
-class Exercicio7{
+class Exercicio13{
     public static int quantidadeMovimentacoes = 0;
     public static int quantidadeComparacoes = 0;
     public static List<Pokemon> lerPokedex() {
         List<Pokemon> pokedex = new ArrayList<>();
         String linha;
         boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader("tmp/pokemon.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("/tmp/pokemon.csv"))) {
             while ((linha = br.readLine()) != null) {
                 if (isFirstLine) {
                     isFirstLine = false;
@@ -176,31 +176,84 @@ class Exercicio7{
         }
         return pokemonsSelecionados.toArray(new Pokemon[0]);
     }
-    public static void ordenacaoInsercao(Pokemon[] pokemonsSelecionados){
-        for (int i = 1; i < pokemonsSelecionados.length; i++){ 
-            quantidadeMovimentacoes++;
-            Pokemon tmp = pokemonsSelecionados[i]; 
-            int j = i - 1; 
-            quantidadeComparacoes++;
-            while ((j >= 0) && (pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) > 0)){
-                quantidadeMovimentacoes++;
-                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j]; j--;
-                quantidadeComparacoes++;
-            } 
-            quantidadeComparacoes++;
-            while (j >= 0 && pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) == 0 && pokemonsSelecionados[j].getName().compareTo(tmp.getName()) > 0) {
-                quantidadeMovimentacoes++;
-                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j];
-                j--;
-                quantidadeComparacoes++;
-            }
-            quantidadeMovimentacoes++;
-            pokemonsSelecionados[j + 1] = tmp;
-        }
-    }
     public static void escrevePokemons(Pokemon[] pokemons){
         for(Pokemon pokemon : pokemons){
             pokemon.imprimir();
+        }
+    }
+    public static void mergeSort(Pokemon[] array) {
+        mergeSort(array, 0, array.length - 1);
+    }
+
+    private static void mergeSort(Pokemon[] array, int esq, int dir) {
+        if (esq < dir) {
+            int meio = (esq + dir) / 2;
+            mergeSort(array, esq, meio);
+            mergeSort(array, meio + 1, dir);
+            intercalar(array, esq, meio, dir);
+        }
+    }
+
+    public static void intercalar(Pokemon[] array, int esq, int meio, int dir) {
+        int n1 = meio - esq + 1;
+        int n2 = dir - meio;
+
+        Pokemon[] a1 = new Pokemon[n1];
+        Pokemon[] a2 = new Pokemon[n2];
+
+        for (int i = 0; i < n1; i++) {
+            a1[i] = array[esq + i];
+            quantidadeMovimentacoes++;
+        }
+
+        for (int j = 0; j < n2; j++) {
+            a2[j] = array[meio + 1 + j];
+            quantidadeMovimentacoes++;
+        }
+
+        int i = 0, j = 0;
+        int k = esq;
+
+        while (i < n1 && j < n2) {
+            int typeComparison = a1[i].getTypes()[0].compareTo(a2[j].getTypes()[0]);    
+            quantidadeComparacoes++;
+            if (typeComparison < 0) {
+                array[k] = a1[i];
+                i++;
+                quantidadeMovimentacoes++;
+            } else if (typeComparison > 0) {
+                array[k] = a2[j];
+                j++;
+                quantidadeMovimentacoes++;
+            } else {
+                quantidadeComparacoes++;
+                int nameComparison = a1[i].getName().compareTo(a2[j].getName());
+                quantidadeComparacoes++;
+                if (nameComparison < 0) {
+                    array[k] = a1[i];
+                    i++;
+                    quantidadeMovimentacoes++;
+                } else {
+                    array[k] = a2[j];
+                    j++;
+                    quantidadeMovimentacoes++;
+                }
+            }
+            k++;
+        }
+
+        while (i < n1) {
+            array[k] = a1[i];
+            i++;
+            k++;
+            quantidadeMovimentacoes++;
+        }
+
+        while (j < n2) {
+            array[k] = a2[j];
+            j++;
+            k++;
+            quantidadeMovimentacoes++;
         }
     }
     public static void main(String[] args) {
@@ -208,10 +261,10 @@ class Exercicio7{
         Scanner scanner = new Scanner(System.in);
         List<Pokemon> pokedex = lerPokedex();
         Pokemon[] pokemonsSelecionados = selecionarPokemons(pokedex, scanner);
-        ordenacaoInsercao(pokemonsSelecionados);
+        mergeSort(pokemonsSelecionados);
         escrevePokemons(pokemonsSelecionados);
         double fim = new Date().getTime();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_insercao.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_mergesort.txt"))) {
             writer.write("851234\t" + quantidadeComparacoes + "\t" + quantidadeMovimentacoes + "\t" + (fim-inicio)/1000.0);
         } catch (IOException e) {
             System.err.println("Erro ao criar o arquivo de log: " + e.getMessage());

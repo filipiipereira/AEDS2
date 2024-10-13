@@ -131,6 +131,7 @@ class Pokemon {
 }
 class Exercicio5{
     public static int quantidadeMovimentacoes = 0;
+    public static int quantidadeComparacoes = 0;
     public static List<Pokemon> lerPokedex() {
         List<Pokemon> pokedex = new ArrayList<>();
         String linha;
@@ -162,6 +163,7 @@ class Exercicio5{
             encontrou = false;
             int i = 0;
             while(!encontrou && i < pokedex.size()){
+                quantidadeComparacoes++;
                 if(pokedex.get(i).getId() == id){
                     pokemonsSelecionados.add(pokedex.get(i));
                     quantidadePokemons++;
@@ -179,6 +181,7 @@ class Exercicio5{
        for (int i = 0; i < (pokemonsSelecionados.length - 1); i++) {
 			int menor = i;
 			for (int j = (i + 1); j < pokemonsSelecionados.length; j++){
+                quantidadeComparacoes++;
 				if (pokemonsSelecionados[menor].getName().compareTo(pokemonsSelecionados[j].getName()) > 0){
 					menor = j;
 				}
@@ -203,7 +206,7 @@ class Exercicio5{
         escrevePokemons(pokemonsSelecionados);
         double fim = new Date().getTime();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_selecao.txt"))) {
-            writer.write("851234\t" + (fim-inicio)/1000.0 + "\t" + quantidadeMovimentacoes);
+            writer.write("851234\t" + quantidadeComparacoes + "\t" + quantidadeMovimentacoes + "\t" + (fim-inicio)/1000.0);
         } catch (IOException e) {
             System.err.println("Erro ao criar o arquivo de log: " + e.getMessage());
         }

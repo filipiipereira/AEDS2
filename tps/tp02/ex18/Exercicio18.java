@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -129,14 +127,14 @@ class Pokemon {
         System.out.println(getWeight() + "kg - " + getHeight() + "m - " + getCaptureRate() + "% - " + isLegendary() + " - " + getGeneration() + " gen] - " + dateFormat.format(getCaptureDate()));
     }
 }
-class Exercicio7{
-    public static int quantidadeMovimentacoes = 0;
-    public static int quantidadeComparacoes = 0;
+class Exercicio18{
+    //public static int quantidadeMovimentacoes = 0;
+    //public static int quantidadeComparacoes = 0;
     public static List<Pokemon> lerPokedex() {
         List<Pokemon> pokedex = new ArrayList<>();
         String linha;
         boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader("tmp/pokemon.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("/tmp/pokemon.csv"))) {
             while ((linha = br.readLine()) != null) {
                 if (isFirstLine) {
                     isFirstLine = false;
@@ -176,45 +174,59 @@ class Exercicio7{
         }
         return pokemonsSelecionados.toArray(new Pokemon[0]);
     }
-    public static void ordenacaoInsercao(Pokemon[] pokemonsSelecionados){
-        for (int i = 1; i < pokemonsSelecionados.length; i++){ 
-            quantidadeMovimentacoes++;
-            Pokemon tmp = pokemonsSelecionados[i]; 
-            int j = i - 1; 
-            quantidadeComparacoes++;
-            while ((j >= 0) && (pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) > 0)){
-                quantidadeMovimentacoes++;
-                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j]; j--;
-                quantidadeComparacoes++;
-            } 
-            quantidadeComparacoes++;
-            while (j >= 0 && pokemonsSelecionados[j].getCaptureDate().compareTo(tmp.getCaptureDate()) == 0 && pokemonsSelecionados[j].getName().compareTo(tmp.getName()) > 0) {
-                quantidadeMovimentacoes++;
-                pokemonsSelecionados[j + 1] = pokemonsSelecionados[j];
+    public static void escrevePokemons(Pokemon[] pokemons, int n){
+        for(int i = 0; i < n; i++){
+            pokemons[i].imprimir();
+        }
+    }
+    public static void quickSort(Pokemon[] array) {
+        quickSort(array, 0, array.length - 1, 10);
+    }
+
+    private static void quickSort(Pokemon[] array, int esq, int dir, int k) {
+        if (esq >= dir) return;
+
+        int i = esq, j = dir;
+        int pivo = array[(dir + esq) / 2].getGeneration();
+        while (i <= j) {
+            while (array[i].getGeneration() < pivo || 
+                (array[i].getGeneration() == pivo && array[i].getName().compareTo(array[(dir + esq) / 2].getName()) < 0)) 
+                i++;
+            while (array[j].getGeneration() > pivo || 
+                (array[j].getGeneration() == pivo && array[j].getName().compareTo(array[(dir + esq) / 2].getName()) > 0)) 
                 j--;
-                quantidadeComparacoes++;
+            if (i <= j) {
+                Pokemon tmp = array[i];
+                array[i] = array[j];
+                array[j] = tmp;
+                i++;
+                j--;
             }
-            quantidadeMovimentacoes++;
-            pokemonsSelecionados[j + 1] = tmp;
+        }
+
+        if (i - esq <= k) {
+            quickSort(array, esq, j, k);
+            quickSort(array, i, dir, k - (i - esq));
+        } else {
+            quickSort(array, esq, j, k);
         }
     }
-    public static void escrevePokemons(Pokemon[] pokemons){
-        for(Pokemon pokemon : pokemons){
-            pokemon.imprimir();
-        }
-    }
+
+
     public static void main(String[] args) {
-        double inicio = new Date().getTime();
+        //double inicio = new Date().getTime();
         Scanner scanner = new Scanner(System.in);
         List<Pokemon> pokedex = lerPokedex();
         Pokemon[] pokemonsSelecionados = selecionarPokemons(pokedex, scanner);
-        ordenacaoInsercao(pokemonsSelecionados);
-        escrevePokemons(pokemonsSelecionados);
-        double fim = new Date().getTime();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_insercao.txt"))) {
+        quickSort(pokemonsSelecionados);
+        escrevePokemons(pokemonsSelecionados, 10);
+        //double fim = new Date().getTime();
+        /*
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("matrícula_mergesort.txt"))) {
             writer.write("851234\t" + quantidadeComparacoes + "\t" + quantidadeMovimentacoes + "\t" + (fim-inicio)/1000.0);
         } catch (IOException e) {
             System.err.println("Erro ao criar o arquivo de log: " + e.getMessage());
         }
+        */
     }
 }
